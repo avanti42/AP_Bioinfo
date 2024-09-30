@@ -1,0 +1,45 @@
+#Make and set directory
+mkdir HW_5
+cd HW_5
+mkdir Lec_06
+cd Lec_06
+#Download the fasta file
+bio fetch GCF_000146045.2 -format fasta > SC.fasta
+#Size of the file
+du -sh SC.fasta
+#Find total size of the genome
+grep -v "^>" SC.fasta | wc | awk '{print $3 - $1}'
+#Number of chromosomes
+grep -c "^>" SC.fasta
+#The name(id) and length of each chromosome in the genome
+samtools faidx SC.fasta
+cut -f1,2 SC.fasta.fai
+
+#NCBI datasets 
+micromamba update ncbi-datasets-cli jq
+#Download genome
+datasets download genome accession GCF_000146045.2
+#Unzip file
+unzip -o ncbi_dataset.zip
+## Make a link to a simpler name
+ln -sf ncbi_dataset/data/GCF_000146045.2/GCF_000146045.2_R64_genomic.fna SC_R64.fa
+# Simulate reads with wgsim
+wgsim
+#Remove error/ mutations etc
+wgsim -e 0 -r 0 -R 0 -N 1000 SC_R64.fa read1.fq read2.fq
+#Stats
+seqkit stats read1.fq read2.fq
+#For 1x coverage
+wgsim -e 0 -r 0 -R 0 -1 100 -2 100 -N 25000 SC_R64.fa read1.fq read2.fq
+#For 10x Coverage 
+wgsim -e 0 -r 0 -R 0 -1 100 -2 100 -N 610000 SC_R64.fa read1.fq read2.fq
+seqkit stats read1.fq read2.fq
+#File size 
+du -sh read1.fq read2.fq
+#Compress files
+gzip read1.fq read2.fq
+#list the file to see changes
+ls
+#File size in human readable form
+du -sh read1.fq.gz read2.fq.gz
+

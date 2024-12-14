@@ -29,10 +29,6 @@ fastp -i SRR7851676_1.trim.fastq -I SRR7851676_2.trim.fastq \
 fastqc SRR7851676_1.trim.front.fastq  
 fastqc SRR7851676_2.trim.front.fastq
 
-#Also Tried
-fastp -i SRR7851676_1.trim.front.fastq -I SRR7851676_2.trim.front.fastq \
-      -o SRR7851676_1.trim.front.GC.fastq -O SRR7851676_2.trim.front.GC.fastq \
-      --low_complexity_filter
 
 
       
